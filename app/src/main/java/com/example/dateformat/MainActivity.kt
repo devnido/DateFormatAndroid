@@ -1,12 +1,13 @@
 package com.example.dateformat
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.joestelmach.natty.Parser
 import kotlinx.android.synthetic.main.activity_main.*
-import org.joda.time.format.DateTimeFormatter
-import org.joda.time.format.ISODateTimeFormat
 import java.lang.Exception
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -23,20 +24,21 @@ class MainActivity : AppCompatActivity() {
     private fun validateDate(){
 
         try {
-            val date = textInputLayout.editText?.text
 
-            val fmt: DateTimeFormatter = ISODateTimeFormat.dateTime()
+            val parser = Parser()
+            val groups = parser.parse(textInputLayout.editText?.text.toString())
+            var date: Date? = null
 
-            val dt = fmt.parseDateTime(date.toString())
+            groups.map {
+                Log.d("TAG_DATE", it.dates.toString())
+                date = it.dates[0]
+            }
 
-            val outputDate = fmt.print(dt);
+            textView.text = date.toString()
 
-            textView.text = outputDate
         }catch (e: Exception){
             Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
         }
-
-
 
     }
 
